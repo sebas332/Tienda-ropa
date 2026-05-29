@@ -39,6 +39,10 @@
             font: inherit;
         }
 
+        button {
+            cursor: pointer;
+        }
+
         .app {
             display: grid;
             grid-template-columns: 252px minmax(0, 1fr);
@@ -97,6 +101,7 @@
         .nav button,
         .icon-btn,
         .primary-btn,
+        .secondary-btn,
         .filter-btn {
             border: 0;
             cursor: pointer;
@@ -202,6 +207,7 @@
 
         .icon-btn,
         .primary-btn,
+        .secondary-btn,
         .filter-btn {
             min-height: 42px;
             border-radius: 8px;
@@ -223,6 +229,13 @@
             background: var(--accent);
             color: #ffffff;
             font-weight: 700;
+        }
+
+        .secondary-btn {
+            padding: 0 12px;
+            background: #eef2e9;
+            color: #465149;
+            font-weight: 800;
         }
 
         .grid {
@@ -301,6 +314,14 @@
             font-size: 13px;
         }
 
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
         .content {
             grid-template-columns: minmax(0, 1.45fr) minmax(320px, .75fr);
             align-items: start;
@@ -329,7 +350,8 @@
             font-size: 13px;
         }
 
-        .filters {
+        .filters,
+        .table-actions {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
@@ -363,13 +385,7 @@
             align-items: end;
             padding: 12px;
             border-radius: 8px;
-            background: repeating-linear-gradient(
-                to top,
-                #f4f6f0,
-                #f4f6f0 1px,
-                transparent 1px,
-                transparent 46px
-            );
+            background: repeating-linear-gradient(to top, #f4f6f0, #f4f6f0 1px, transparent 1px, transparent 46px);
             border: 1px solid #edf0e7;
         }
 
@@ -401,11 +417,36 @@
             text-align: center;
         }
 
-        .split {
+        .split,
+        .form-grid {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(280px, .8fr);
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 16px;
-            margin-top: 16px;
+        }
+
+        .form-grid {
+            grid-template-columns: repeat(4, minmax(130px, 1fr));
+            align-items: end;
+        }
+
+        label.field {
+            display: grid;
+            gap: 6px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        input,
+        select {
+            width: 100%;
+            min-height: 42px;
+            padding: 0 12px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+            color: var(--ink);
         }
 
         table {
@@ -419,6 +460,7 @@
             border-bottom: 1px solid #edf0e7;
             text-align: left;
             font-size: 14px;
+            vertical-align: middle;
         }
 
         th {
@@ -568,9 +610,7 @@
             border-radius: 8px;
             color: #ffffff;
             overflow: hidden;
-            background:
-                linear-gradient(180deg, rgba(16, 25, 22, .08), rgba(16, 25, 22, .88)),
-                url("https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=80") center / cover;
+            background: linear-gradient(180deg, rgba(16, 25, 22, .08), rgba(16, 25, 22, .88)), url("https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=80") center / cover;
         }
 
         .campaign strong {
@@ -582,6 +622,44 @@
             max-width: 520px;
             margin: 8px 0 0;
             color: rgba(255, 255, 255, .82);
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        .qty-control {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .qty-control button {
+            width: 30px;
+            height: 30px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+            font-weight: 900;
+        }
+
+        .notice {
+            min-height: 40px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            background: var(--accent-soft);
+            color: #14534e;
+            font-size: 13px;
+            font-weight: 800;
+            display: none;
+        }
+
+        .notice.show {
+            display: block;
         }
 
         @media (max-width: 1080px) {
@@ -658,7 +736,8 @@
                 grid-column: 1 / -1;
             }
 
-            .metrics {
+            .metrics,
+            .form-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -675,8 +754,8 @@
                 gap: 7px;
             }
 
-            th:nth-child(3),
-            td:nth-child(3) {
+            th:nth-child(4),
+            td:nth-child(4) {
                 display: none;
             }
         }
@@ -694,23 +773,23 @@
             </div>
 
             <nav class="nav">
-                <button class="active" type="button" aria-label="Dashboard">
+                <button class="active" type="button" data-view="dashboard" aria-label="Dashboard">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13h8V3H3v10Z"/><path d="M13 21h8V11h-8v10Z"/><path d="M13 3v6h8V3h-8Z"/><path d="M3 21h8v-6H3v6Z"/></svg>
                     <span>Dashboard</span>
                 </button>
-                <button type="button" aria-label="Pedidos">
+                <button type="button" data-view="pedidos" aria-label="Pedidos">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                     <span>Pedidos</span>
                 </button>
-                <button type="button" aria-label="Inventario">
+                <button type="button" data-view="inventario" aria-label="Inventario">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
                     <span>Inventario</span>
                 </button>
-                <button type="button" aria-label="Clientes">
+                <button type="button" data-view="clientes" aria-label="Clientes">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                     <span>Clientes</span>
                 </button>
-                <button type="button" aria-label="Reportes">
+                <button type="button" data-view="reportes" aria-label="Reportes">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
                     <span>Reportes</span>
                 </button>
@@ -718,249 +797,741 @@
 
             <div class="sidebar-card">
                 <strong>Meta mensual</strong>
-                <p>Faltan $4.8M para alcanzar el objetivo de mayo.</p>
-                <div class="progress" aria-hidden="true"><i style="width: 76%"></i></div>
+                <p id="goalText">Calculando avance mensual.</p>
+                <div class="progress" aria-hidden="true"><i id="goalBar" style="width: 0%"></i></div>
             </div>
         </aside>
 
         <main class="main">
             <header class="topbar">
                 <div class="headline">
-                    <h1>Dashboard de tienda de ropa</h1>
-                    <p>Ventas, pedidos e inventario listos para revisar de un vistazo.</p>
+                    <h1 id="pageTitle">Dashboard de tienda de ropa</h1>
+                    <p id="pageSubtitle">Ventas, pedidos e inventario listos para revisar de un vistazo.</p>
                 </div>
                 <div class="actions">
                     <label class="search" aria-label="Buscar">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                        <input type="search" placeholder="Buscar producto, cliente o pedido">
+                        <input id="searchInput" type="search" placeholder="Buscar producto, cliente o pedido">
                     </label>
-                    <button class="icon-btn" type="button" title="Notificaciones" aria-label="Notificaciones">
+                    <button class="icon-btn" type="button" title="Notificaciones" aria-label="Notificaciones" id="notifyButton">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
                     </button>
-                    <button class="icon-btn" type="button" title="Ajustes" aria-label="Ajustes">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4a1.65 1.65 0 0 0-1 .6 1.65 1.65 0 0 0-.38 1.04V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 8.6 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-.6-1 1.65 1.65 0 0 0-1.04-.38H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 8.6a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6c.38 0 .73-.13 1-.34.31-.24.5-.62.5-1.02V3a2 2 0 1 1 4 0v.09c0 .4.19.78.5 1.02.27.21.62.34 1 .34a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c0 .38.13.73.34 1 .24.31.62.5 1.02.5H21a2 2 0 1 1 0 4h-.09c-.4 0-.78.19-1.02.5-.21.27-.34.62-.34 1Z"/></svg>
+                    <button class="icon-btn" type="button" title="Ajustes" aria-label="Ajustes" id="resetButton">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></svg>
                     </button>
-                    <button class="primary-btn" type="button">Nuevo pedido</button>
+                    <button class="primary-btn" type="button" id="mainAction">Nuevo pedido</button>
                 </div>
             </header>
 
-            <section class="grid metrics" aria-label="Indicadores principales">
-                <article class="metric">
-                    <div class="metric-top">
-                        <div class="metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-                        <span class="trend">+18%</span>
-                    </div>
-                    <div><strong>$28.4M</strong><small>Ventas del mes</small></div>
-                </article>
-                <article class="metric">
-                    <div class="metric-top">
-                        <div class="metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
-                        <span class="trend">+32</span>
-                    </div>
-                    <div><strong>486</strong><small>Pedidos confirmados</small></div>
-                </article>
-                <article class="metric">
-                    <div class="metric-top">
-                        <div class="metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.38 3.46 16 2l-4 4-4-4-4.38 1.46A2 2 0 0 0 2.3 5.34L2 9l4 1v12h12V10l4-1-.3-3.66a2 2 0 0 0-1.32-1.88Z"/></svg></div>
-                        <span class="trend">84%</span>
-                    </div>
-                    <div><strong>1.248</strong><small>Prendas disponibles</small></div>
-                </article>
-                <article class="metric">
-                    <div class="metric-top">
-                        <div class="metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-                        <span class="trend">+9%</span>
-                    </div>
-                    <div><strong>3.921</strong><small>Clientes activos</small></div>
-                </article>
-            </section>
+            <div class="notice" id="notice"></div>
 
-            <section class="grid content">
-                <div>
-                    <article class="panel">
-                        <div class="panel-header">
-                            <div>
-                                <h2 class="panel-title">Ventas por dia</h2>
-                                <p class="panel-subtitle">Semana actual en millones de pesos</p>
-                            </div>
-                            <div class="filters" aria-label="Filtro de grafica">
-                                <button class="filter-btn active" data-range="week" type="button">Semana</button>
-                                <button class="filter-btn" data-range="month" type="button">Mes</button>
-                                <button class="filter-btn" data-range="quarter" type="button">Trimestre</button>
-                            </div>
-                        </div>
-                        <div class="chart-wrap">
-                            <div class="chart" id="salesChart" aria-label="Grafica de ventas"></div>
-                            <div class="chart-labels" id="chartLabels"></div>
-                        </div>
-                    </article>
+            <section class="view active" id="dashboardView">
+                <section class="grid metrics" aria-label="Indicadores principales" id="metrics"></section>
 
-                    <div class="split">
+                <section class="grid content">
+                    <div>
                         <article class="panel">
                             <div class="panel-header">
                                 <div>
-                                    <h2 class="panel-title">Inventario critico</h2>
-                                    <p class="panel-subtitle">Referencias que necesitan reposicion</p>
+                                    <h2 class="panel-title">Ventas por dia</h2>
+                                    <p class="panel-subtitle">Semana actual en millones de pesos</p>
+                                </div>
+                                <div class="filters" aria-label="Filtro de grafica">
+                                    <button class="filter-btn active" data-range="week" type="button">Semana</button>
+                                    <button class="filter-btn" data-range="month" type="button">Mes</button>
+                                    <button class="filter-btn" data-range="quarter" type="button">Trimestre</button>
                                 </div>
                             </div>
+                            <div class="chart-wrap">
+                                <div class="chart" id="salesChart" aria-label="Grafica de ventas"></div>
+                                <div class="chart-labels" id="chartLabels"></div>
+                            </div>
+                        </article>
+
+                        <div class="split">
+                            <article class="panel">
+                                <div class="panel-header">
+                                    <div>
+                                        <h2 class="panel-title">Inventario critico</h2>
+                                        <p class="panel-subtitle">Referencias que necesitan reposicion</p>
+                                    </div>
+                                </div>
+                                <div class="table-wrap">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Producto</th>
+                                                <th>Stock</th>
+                                                <th>Talla</th>
+                                                <th>Estado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="criticalStock"></tbody>
+                                    </table>
+                                </div>
+                            </article>
+
+                            <article class="campaign">
+                                <strong>Coleccion urbana primavera</strong>
+                                <p id="campaignText">La campana activa concentra ventas online de la semana.</p>
+                            </article>
+                        </div>
+                    </div>
+
+                    <aside class="grid">
+                        <article class="panel">
+                            <div class="panel-header">
+                                <div>
+                                    <h2 class="panel-title">Mas vendidos</h2>
+                                    <p class="panel-subtitle">Productos con mayor rotacion</p>
+                                </div>
+                            </div>
+                            <div class="product-list" id="topProducts"></div>
+                        </article>
+
+                        <article class="panel">
+                            <div class="panel-header">
+                                <div>
+                                    <h2 class="panel-title">Pedidos recientes</h2>
+                                    <p class="panel-subtitle">Ultimos movimientos</p>
+                                </div>
+                            </div>
+                            <div class="orders" id="recentOrders"></div>
+                        </article>
+                    </aside>
+                </section>
+            </section>
+
+            <section class="view" id="pedidosView">
+                <section class="grid metrics" id="orderMetrics"></section>
+                <section class="grid">
+                    <article class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h2 class="panel-title">Crear pedido</h2>
+                                <p class="panel-subtitle">Registra una venta y descuenta el inventario automaticamente</p>
+                            </div>
+                        </div>
+                        <form class="form-grid" id="orderForm">
+                            <label class="field">Cliente<select id="orderClient" required></select></label>
+                            <label class="field">Producto<select id="orderProduct" required></select></label>
+                            <label class="field">Cantidad<input id="orderQty" type="number" min="1" value="1" required></label>
+                            <label class="field">Estado<select id="orderStatus"><option>Pago aprobado</option><option>Empaque</option><option>Enviado</option><option>Pendiente</option></select></label>
+                            <button class="primary-btn" type="submit">Guardar pedido</button>
+                        </form>
+                    </article>
+
+                    <article class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h2 class="panel-title">Listado de pedidos</h2>
+                                <p class="panel-subtitle">Cambia estados, revisa valores y filtra desde la busqueda superior</p>
+                            </div>
+                        </div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Pedido</th>
+                                        <th>Cliente</th>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>Total</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ordersTable"></tbody>
+                            </table>
+                        </div>
+                    </article>
+                </section>
+            </section>
+
+            <section class="view" id="inventarioView">
+                <section class="grid metrics" id="inventoryMetrics"></section>
+                <section class="grid">
+                    <article class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h2 class="panel-title">Agregar producto</h2>
+                                <p class="panel-subtitle">Crea nuevas referencias para vender en pedidos</p>
+                            </div>
+                        </div>
+                        <form class="form-grid" id="productForm">
+                            <label class="field">Producto<input id="productName" type="text" placeholder="Blusa satinada" required></label>
+                            <label class="field">Categoria<input id="productCategory" type="text" placeholder="Blusas" required></label>
+                            <label class="field">Talla<input id="productSizes" type="text" placeholder="S - L" required></label>
+                            <label class="field">Stock<input id="productStock" type="number" min="0" value="10" required></label>
+                            <label class="field">Precio<input id="productPrice" type="number" min="1000" step="1000" value="129000" required></label>
+                            <label class="field">Color<input id="productColor" type="color" value="#0f766e" required></label>
+                            <button class="primary-btn" type="submit">Agregar producto</button>
+                        </form>
+                    </article>
+
+                    <article class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h2 class="panel-title">Inventario</h2>
+                                <p class="panel-subtitle">Ajusta existencias sin salir del panel</p>
+                            </div>
+                        </div>
+                        <div class="table-wrap">
                             <table>
                                 <thead>
                                     <tr>
                                         <th>Producto</th>
+                                        <th>Categoria</th>
                                         <th>Stock</th>
-                                        <th>Talla</th>
+                                        <th>Precio</th>
                                         <th>Estado</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><div class="stock"><span class="swatch" style="background:#171717"></span><strong>Blazer sastre negro</strong></div></td>
-                                        <td>12</td>
-                                        <td>S - M</td>
-                                        <td><span class="tag warn">Bajo</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><div class="stock"><span class="swatch" style="background:#d9dde4"></span><strong>Jean recto claro</strong></div></td>
-                                        <td>8</td>
-                                        <td>28 - 32</td>
-                                        <td><span class="tag danger">Critico</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><div class="stock"><span class="swatch" style="background:#7b2f3a"></span><strong>Vestido midi vino</strong></div></td>
-                                        <td>21</td>
-                                        <td>M - L</td>
-                                        <td><span class="tag ok">Estable</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><div class="stock"><span class="swatch" style="background:#efe0bf"></span><strong>Camisa lino arena</strong></div></td>
-                                        <td>15</td>
-                                        <td>XS - M</td>
-                                        <td><span class="tag warn">Bajo</span></td>
-                                    </tr>
-                                </tbody>
+                                <tbody id="inventoryTable"></tbody>
                             </table>
-                        </article>
+                        </div>
+                    </article>
+                </section>
+            </section>
 
-                        <article class="campaign">
-                            <strong>Coleccion urbana primavera</strong>
-                            <p>La campana activa concentra el 41% de las ventas online de la semana.</p>
-                        </article>
-                    </div>
-                </div>
-
-                <aside class="grid">
+            <section class="view" id="clientesView">
+                <section class="grid metrics" id="customerMetrics"></section>
+                <section class="grid">
                     <article class="panel">
                         <div class="panel-header">
                             <div>
-                                <h2 class="panel-title">Mas vendidos</h2>
-                                <p class="panel-subtitle">Productos con mayor rotacion</p>
+                                <h2 class="panel-title">Nuevo cliente</h2>
+                                <p class="panel-subtitle">Guarda clientes para usarlos al crear pedidos</p>
                             </div>
                         </div>
-                        <div class="product-list">
-                            <div class="product-card">
-                                <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=700&q=80" alt="Chaqueta de cuero en exhibicion">
-                                <div class="product-info">
-                                    <strong>Chaqueta biker premium</strong>
-                                    <span>132 unidades vendidas</span>
-                                    <div class="progress"><i style="width: 88%"></i></div>
-                                </div>
+                        <form class="form-grid" id="customerForm">
+                            <label class="field">Nombre<input id="customerName" type="text" placeholder="Nombre completo" required></label>
+                            <label class="field">Correo<input id="customerEmail" type="email" placeholder="cliente@email.com" required></label>
+                            <label class="field">Ciudad<input id="customerCity" type="text" placeholder="Bogota" required></label>
+                            <label class="field">Segmento<select id="customerSegment"><option>Nuevo</option><option>Frecuente</option><option>VIP</option></select></label>
+                            <button class="primary-btn" type="submit">Guardar cliente</button>
+                        </form>
+                    </article>
+
+                    <article class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h2 class="panel-title">Clientes</h2>
+                                <p class="panel-subtitle">Historial de compra calculado desde los pedidos</p>
                             </div>
-                            <div class="product-card">
-                                <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=700&q=80" alt="Vestido casual de temporada">
-                                <div class="product-info">
-                                    <strong>Vestido vaporoso floral</strong>
-                                    <span>96 unidades vendidas</span>
-                                    <div class="progress"><i style="width: 71%"></i></div>
-                                </div>
+                        </div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Cliente</th>
+                                        <th>Correo</th>
+                                        <th>Ciudad</th>
+                                        <th>Segmento</th>
+                                        <th>Pedidos</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customersTable"></tbody>
+                            </table>
+                        </div>
+                    </article>
+                </section>
+            </section>
+
+            <section class="view" id="reportesView">
+                <section class="grid metrics" id="reportMetrics"></section>
+                <section class="grid content">
+                    <article class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h2 class="panel-title">Ventas por estado</h2>
+                                <p class="panel-subtitle">Distribucion actual de los pedidos registrados</p>
                             </div>
+                            <button class="secondary-btn" type="button" id="exportButton">Exportar CSV</button>
+                        </div>
+                        <div class="chart-wrap">
+                            <div class="chart" id="statusChart" aria-label="Grafica por estado"></div>
+                            <div class="chart-labels" id="statusLabels"></div>
                         </div>
                     </article>
 
                     <article class="panel">
                         <div class="panel-header">
                             <div>
-                                <h2 class="panel-title">Pedidos recientes</h2>
-                                <p class="panel-subtitle">Ultimos movimientos</p>
+                                <h2 class="panel-title">Resumen rapido</h2>
+                                <p class="panel-subtitle">Lectura comercial de inventario y clientes</p>
                             </div>
                         </div>
-                        <div class="orders">
-                            <div class="order-row">
-                                <div class="avatar">LC</div>
-                                <div><strong>Laura Cardenas</strong><span>#MN-2048 · Enviado</span></div>
-                                <div class="amount">$289K</div>
-                            </div>
-                            <div class="order-row">
-                                <div class="avatar">AM</div>
-                                <div><strong>Andres Mora</strong><span>#MN-2047 · Empaque</span></div>
-                                <div class="amount">$164K</div>
-                            </div>
-                            <div class="order-row">
-                                <div class="avatar">PR</div>
-                                <div><strong>Paula Rios</strong><span>#MN-2046 · Pago aprobado</span></div>
-                                <div class="amount">$421K</div>
-                            </div>
-                            <div class="order-row">
-                                <div class="avatar">SG</div>
-                                <div><strong>Sofia Gomez</strong><span>#MN-2045 · Pendiente</span></div>
-                                <div class="amount">$118K</div>
-                            </div>
-                        </div>
+                        <table>
+                            <tbody id="summaryTable"></tbody>
+                        </table>
                     </article>
-                </aside>
+                </section>
             </section>
         </main>
     </div>
 
     <script>
-        const ranges = {
-            week: {
-                labels: ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"],
-                values: [3.8, 4.6, 4.1, 5.2, 6.3, 3.9, 4.8]
-            },
-            month: {
-                labels: ["Sem 1", "Sem 2", "Sem 3", "Sem 4", "Sem 5", "Online", "Tienda"],
-                values: [14.2, 18.7, 21.4, 23.8, 20.2, 28.4, 19.6]
-            },
-            quarter: {
-                labels: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul"],
-                values: [42, 38, 47, 51, 58, 44, 49]
-            }
+        const storageKey = "modaNovaData";
+        const pesos = new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 });
+
+        const defaultData = {
+            products: [
+                { id: 1, name: "Chaqueta biker premium", category: "Chaquetas", sizes: "S - L", stock: 34, price: 289000, color: "#171717", sold: 132, image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=700&q=80" },
+                { id: 2, name: "Vestido vaporoso floral", category: "Vestidos", sizes: "XS - M", stock: 28, price: 198000, color: "#be4b63", sold: 96, image: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=700&q=80" },
+                { id: 3, name: "Blazer sastre negro", category: "Blazers", sizes: "S - M", stock: 12, price: 241000, color: "#101010", sold: 62, image: "" },
+                { id: 4, name: "Jean recto claro", category: "Denim", sizes: "28 - 32", stock: 8, price: 164000, color: "#d9dde4", sold: 74, image: "" },
+                { id: 5, name: "Vestido midi vino", category: "Vestidos", sizes: "M - L", stock: 21, price: 211000, color: "#7b2f3a", sold: 45, image: "" },
+                { id: 6, name: "Camisa lino arena", category: "Camisas", sizes: "XS - M", stock: 15, price: 118000, color: "#efe0bf", sold: 58, image: "" }
+            ],
+            customers: [
+                { id: 1, name: "Laura Cardenas", email: "laura@email.com", city: "Bogota", segment: "VIP" },
+                { id: 2, name: "Andres Mora", email: "andres@email.com", city: "Medellin", segment: "Frecuente" },
+                { id: 3, name: "Paula Rios", email: "paula@email.com", city: "Cali", segment: "VIP" },
+                { id: 4, name: "Sofia Gomez", email: "sofia@email.com", city: "Barranquilla", segment: "Nuevo" }
+            ],
+            orders: [
+                { id: 2048, customerId: 1, productId: 1, qty: 1, status: "Enviado", createdAt: "2026-05-28" },
+                { id: 2047, customerId: 2, productId: 4, qty: 1, status: "Empaque", createdAt: "2026-05-28" },
+                { id: 2046, customerId: 3, productId: 3, qty: 2, status: "Pago aprobado", createdAt: "2026-05-27" },
+                { id: 2045, customerId: 4, productId: 6, qty: 1, status: "Pendiente", createdAt: "2026-05-27" }
+            ]
         };
 
-        const chart = document.querySelector("#salesChart");
-        const labels = document.querySelector("#chartLabels");
-        const filterButtons = document.querySelectorAll(".filter-btn");
+        let data = loadData();
+        let activeView = "dashboard";
+        let activeRange = "week";
 
-        function renderChart(range) {
-            const data = ranges[range];
-            const max = Math.max(...data.values);
+        const titles = {
+            dashboard: ["Dashboard de tienda de ropa", "Ventas, pedidos e inventario listos para revisar de un vistazo.", "Nuevo pedido"],
+            pedidos: ["Pedidos", "Crea ventas, actualiza estados y revisa el flujo de entrega.", "Nuevo pedido"],
+            inventario: ["Inventario", "Controla productos, existencias y alertas de reposicion.", "Nuevo producto"],
+            clientes: ["Clientes", "Administra compradores y su historial comercial.", "Nuevo cliente"],
+            reportes: ["Reportes", "Analiza ventas, rotacion y datos listos para exportar.", "Exportar CSV"]
+        };
+
+        const ranges = {
+            week: { labels: ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"], values: [3.8, 4.6, 4.1, 5.2, 6.3, 3.9, 4.8] },
+            month: { labels: ["Sem 1", "Sem 2", "Sem 3", "Sem 4", "Sem 5", "Online", "Tienda"], values: [14.2, 18.7, 21.4, 23.8, 20.2, 28.4, 19.6] },
+            quarter: { labels: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul"], values: [42, 38, 47, 51, 58, 44, 49] }
+        };
+
+        function loadData() {
+            const saved = localStorage.getItem(storageKey);
+            return saved ? JSON.parse(saved) : structuredClone(defaultData);
+        }
+
+        function saveData() {
+            localStorage.setItem(storageKey, JSON.stringify(data));
+        }
+
+        function productById(id) {
+            return data.products.find((product) => product.id === Number(id));
+        }
+
+        function customerById(id) {
+            return data.customers.find((customer) => customer.id === Number(id));
+        }
+
+        function orderTotal(order) {
+            const product = productById(order.productId);
+            return (product?.price || 0) * order.qty;
+        }
+
+        function initials(name) {
+            return name.split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase();
+        }
+
+        function stockTag(stock) {
+            if (stock <= 8) return ["danger", "Critico"];
+            if (stock <= 15) return ["warn", "Bajo"];
+            return ["ok", "Estable"];
+        }
+
+        function filtered(items, fields) {
+            const query = document.querySelector("#searchInput").value.trim().toLowerCase();
+            if (!query) return items;
+            return items.filter((item) => fields(item).join(" ").toLowerCase().includes(query));
+        }
+
+        function renderMetrics(containerId, cards) {
+            document.querySelector(containerId).innerHTML = cards.map((card) => `
+                <article class="metric">
+                    <div class="metric-top">
+                        <div class="metric-icon">${card.icon}</div>
+                        <span class="trend">${card.trend}</span>
+                    </div>
+                    <div><strong>${card.value}</strong><small>${card.label}</small></div>
+                </article>
+            `).join("");
+        }
+
+        function icon(path) {
+            return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${path}</svg>`;
+        }
+
+        function totals() {
+            const sales = data.orders.reduce((sum, order) => sum + orderTotal(order), 0);
+            const stock = data.products.reduce((sum, product) => sum + product.stock, 0);
+            const lowStock = data.products.filter((product) => product.stock <= 15).length;
+            const confirmed = data.orders.filter((order) => order.status !== "Pendiente").length;
+            return { sales, stock, lowStock, confirmed };
+        }
+
+        function renderChart(chartId, labelsId, labels, values, suffix = "") {
+            const chart = document.querySelector(chartId);
+            const labelBox = document.querySelector(labelsId);
+            const max = Math.max(...values, 1);
             chart.innerHTML = "";
-            labels.innerHTML = "";
+            labelBox.innerHTML = "";
 
-            data.values.forEach((value) => {
+            values.forEach((value) => {
                 const bar = document.createElement("div");
                 bar.className = "bar";
                 bar.style.height = `${Math.max(18, (value / max) * 100)}%`;
-                bar.dataset.value = value;
+                bar.dataset.value = `${value}${suffix}`;
                 chart.appendChild(bar);
             });
 
-            data.labels.forEach((label) => {
+            labels.forEach((label) => {
                 const item = document.createElement("span");
                 item.textContent = label;
-                labels.appendChild(item);
+                labelBox.appendChild(item);
             });
         }
 
-        filterButtons.forEach((button) => {
+        function renderDashboard() {
+            const summary = totals();
+            renderMetrics("#metrics", [
+                { value: pesos.format(summary.sales), label: "Ventas registradas", trend: "+18%", icon: icon('<path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/>') },
+                { value: data.orders.length, label: "Pedidos totales", trend: `+${data.orders.length}`, icon: icon('<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>') },
+                { value: summary.stock, label: "Prendas disponibles", trend: `${summary.lowStock} alertas`, icon: icon('<path d="M20.38 3.46 16 2l-4 4-4-4-4.38 1.46A2 2 0 0 0 2.3 5.34L2 9l4 1v12h12V10l4-1-.3-3.66a2 2 0 0 0-1.32-1.88Z"/>') },
+                { value: data.customers.length, label: "Clientes activos", trend: "+9%", icon: icon('<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>') }
+            ]);
+
+            const chartData = ranges[activeRange];
+            renderChart("#salesChart", "#chartLabels", chartData.labels, chartData.values, "");
+
+            document.querySelector("#criticalStock").innerHTML = data.products
+                .slice()
+                .sort((a, b) => a.stock - b.stock)
+                .slice(0, 4)
+                .map((product) => {
+                    const [type, label] = stockTag(product.stock);
+                    return `<tr><td><div class="stock"><span class="swatch" style="background:${product.color}"></span><strong>${product.name}</strong></div></td><td>${product.stock}</td><td>${product.sizes}</td><td><span class="tag ${type}">${label}</span></td></tr>`;
+                }).join("");
+
+            const maxSold = Math.max(...data.products.map((product) => product.sold), 1);
+            document.querySelector("#topProducts").innerHTML = data.products
+                .slice()
+                .sort((a, b) => b.sold - a.sold)
+                .slice(0, 2)
+                .map((product) => `
+                    <div class="product-card">
+                        <img src="${product.image || "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=700&q=80"}" alt="${product.name}">
+                        <div class="product-info">
+                            <strong>${product.name}</strong>
+                            <span>${product.sold} unidades vendidas</span>
+                            <div class="progress"><i style="width: ${(product.sold / maxSold) * 100}%"></i></div>
+                        </div>
+                    </div>
+                `).join("");
+
+            document.querySelector("#recentOrders").innerHTML = data.orders
+                .slice()
+                .sort((a, b) => b.id - a.id)
+                .slice(0, 4)
+                .map((order) => {
+                    const customer = customerById(order.customerId);
+                    return `<div class="order-row"><div class="avatar">${initials(customer.name)}</div><div><strong>${customer.name}</strong><span>#MN-${order.id} · ${order.status}</span></div><div class="amount">${pesos.format(orderTotal(order))}</div></div>`;
+                }).join("");
+
+            const goal = 32000000;
+            const progress = Math.min(100, Math.round((summary.sales / goal) * 100));
+            document.querySelector("#goalText").textContent = `Avance ${progress}% de la meta de ${pesos.format(goal)}.`;
+            document.querySelector("#goalBar").style.width = `${progress}%`;
+            document.querySelector("#campaignText").textContent = `La campana activa concentra ${Math.min(46, 20 + data.orders.length * 4)}% de las ventas online de la semana.`;
+        }
+
+        function renderOrders() {
+            const summary = totals();
+            renderMetrics("#orderMetrics", [
+                { value: data.orders.length, label: "Pedidos creados", trend: "Activo", icon: icon('<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/>') },
+                { value: summary.confirmed, label: "Confirmados", trend: "+", icon: icon('<path d="m20 6-11 11-5-5"/>') },
+                { value: pesos.format(summary.sales), label: "Valor total", trend: "+18%", icon: icon('<path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/>') },
+                { value: data.orders.filter((order) => order.status === "Pendiente").length, label: "Pendientes", trend: "Revisar", icon: icon('<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>') }
+            ]);
+
+            const rows = filtered(data.orders, (order) => {
+                const customer = customerById(order.customerId);
+                const product = productById(order.productId);
+                return [order.id, customer.name, product.name, order.status];
+            }).sort((a, b) => b.id - a.id);
+
+            document.querySelector("#ordersTable").innerHTML = rows.map((order) => {
+                const customer = customerById(order.customerId);
+                const product = productById(order.productId);
+                return `
+                    <tr>
+                        <td><strong>#MN-${order.id}</strong></td>
+                        <td>${customer.name}</td>
+                        <td>${product.name}</td>
+                        <td>${order.qty}</td>
+                        <td><strong>${pesos.format(orderTotal(order))}</strong></td>
+                        <td>
+                            <select data-order-status="${order.id}" aria-label="Estado pedido ${order.id}">
+                                ${["Pago aprobado", "Empaque", "Enviado", "Pendiente"].map((status) => `<option ${status === order.status ? "selected" : ""}>${status}</option>`).join("")}
+                            </select>
+                        </td>
+                    </tr>
+                `;
+            }).join("");
+        }
+
+        function renderInventory() {
+            const summary = totals();
+            const inventoryValue = data.products.reduce((sum, product) => sum + product.stock * product.price, 0);
+            renderMetrics("#inventoryMetrics", [
+                { value: data.products.length, label: "Referencias", trend: "SKU", icon: icon('<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/>') },
+                { value: summary.stock, label: "Unidades", trend: "Total", icon: icon('<path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/>') },
+                { value: summary.lowStock, label: "Alertas de stock", trend: "Bajo", icon: icon('<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>') },
+                { value: pesos.format(inventoryValue), label: "Valor inventario", trend: "+", icon: icon('<path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/>') }
+            ]);
+
+            const rows = filtered(data.products, (product) => [product.name, product.category, product.sizes, product.stock]);
+            document.querySelector("#inventoryTable").innerHTML = rows.map((product) => {
+                const [type, label] = stockTag(product.stock);
+                return `
+                    <tr>
+                        <td><div class="stock"><span class="swatch" style="background:${product.color}"></span><strong>${product.name}</strong></div><span class="muted">${product.sizes}</span></td>
+                        <td>${product.category}</td>
+                        <td><span class="qty-control"><button type="button" data-stock-minus="${product.id}">-</button><strong>${product.stock}</strong><button type="button" data-stock-plus="${product.id}">+</button></span></td>
+                        <td>${pesos.format(product.price)}</td>
+                        <td><span class="tag ${type}">${label}</span></td>
+                    </tr>
+                `;
+            }).join("");
+        }
+
+        function renderCustomers() {
+            renderMetrics("#customerMetrics", [
+                { value: data.customers.length, label: "Clientes guardados", trend: "+9%", icon: icon('<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>') },
+                { value: data.customers.filter((customer) => customer.segment === "VIP").length, label: "Clientes VIP", trend: "Fidelizar", icon: icon('<path d="m12 3 2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7L6.8 19l1-5.8-4.2-4.1 5.8-.8L12 3Z"/>') },
+                { value: data.orders.length, label: "Compras registradas", trend: "+", icon: icon('<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>') },
+                { value: pesos.format(totals().sales), label: "Valor comprado", trend: "+", icon: icon('<path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/>') }
+            ]);
+
+            const rows = filtered(data.customers, (customer) => [customer.name, customer.email, customer.city, customer.segment]);
+            document.querySelector("#customersTable").innerHTML = rows.map((customer) => {
+                const orders = data.orders.filter((order) => order.customerId === customer.id);
+                const total = orders.reduce((sum, order) => sum + orderTotal(order), 0);
+                return `
+                    <tr>
+                        <td><div class="stock"><div class="avatar">${initials(customer.name)}</div><strong>${customer.name}</strong></div></td>
+                        <td>${customer.email}</td>
+                        <td>${customer.city}</td>
+                        <td><span class="tag ${customer.segment === "VIP" ? "ok" : customer.segment === "Frecuente" ? "warn" : "danger"}">${customer.segment}</span></td>
+                        <td>${orders.length}</td>
+                        <td><strong>${pesos.format(total)}</strong></td>
+                    </tr>
+                `;
+            }).join("");
+        }
+
+        function renderReports() {
+            const summary = totals();
+            const avgOrder = data.orders.length ? summary.sales / data.orders.length : 0;
+            const bestProduct = data.products.slice().sort((a, b) => b.sold - a.sold)[0];
+            renderMetrics("#reportMetrics", [
+                { value: pesos.format(summary.sales), label: "Ingresos", trend: "+18%", icon: icon('<path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/>') },
+                { value: pesos.format(avgOrder), label: "Ticket promedio", trend: "Prom.", icon: icon('<path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>') },
+                { value: bestProduct.name, label: "Producto lider", trend: `${bestProduct.sold} uds`, icon: icon('<path d="M20.38 3.46 16 2l-4 4-4-4-4.38 1.46A2 2 0 0 0 2.3 5.34L2 9l4 1v12h12V10l4-1-.3-3.66a2 2 0 0 0-1.32-1.88Z"/>') },
+                { value: summary.lowStock, label: "Reposiciones", trend: "Accion", icon: icon('<path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/>') }
+            ]);
+
+            const statusNames = ["Pago aprobado", "Empaque", "Enviado", "Pendiente"];
+            const statusValues = statusNames.map((status) => data.orders.filter((order) => order.status === status).length);
+            renderChart("#statusChart", "#statusLabels", statusNames.map((status) => status.split(" ")[0]), statusValues, "");
+
+            document.querySelector("#summaryTable").innerHTML = `
+                <tr><td>Clientes con compra</td><td><strong>${new Set(data.orders.map((order) => order.customerId)).size}</strong></td></tr>
+                <tr><td>Productos con baja existencia</td><td><strong>${summary.lowStock}</strong></td></tr>
+                <tr><td>Inventario disponible</td><td><strong>${summary.stock} unidades</strong></td></tr>
+                <tr><td>Pedidos pendientes</td><td><strong>${data.orders.filter((order) => order.status === "Pendiente").length}</strong></td></tr>
+                <tr><td>Total exportable</td><td><strong>${data.orders.length} pedidos</strong></td></tr>
+            `;
+        }
+
+        function renderSelects() {
+            document.querySelector("#orderClient").innerHTML = data.customers.map((customer) => `<option value="${customer.id}">${customer.name}</option>`).join("");
+            document.querySelector("#orderProduct").innerHTML = data.products.map((product) => `<option value="${product.id}">${product.name} · ${product.stock} disp.</option>`).join("");
+        }
+
+        function renderAll() {
+            renderDashboard();
+            renderSelects();
+            renderOrders();
+            renderInventory();
+            renderCustomers();
+            renderReports();
+        }
+
+        function setView(view) {
+            activeView = view;
+            document.querySelectorAll(".nav button").forEach((button) => button.classList.toggle("active", button.dataset.view === view));
+            document.querySelectorAll(".view").forEach((section) => section.classList.toggle("active", section.id === `${view}View`));
+            document.querySelector("#pageTitle").textContent = titles[view][0];
+            document.querySelector("#pageSubtitle").textContent = titles[view][1];
+            document.querySelector("#mainAction").textContent = titles[view][2];
+            document.querySelector("#searchInput").value = "";
+            renderAll();
+        }
+
+        function flash(message) {
+            const notice = document.querySelector("#notice");
+            notice.textContent = message;
+            notice.classList.add("show");
+            window.clearTimeout(flash.timer);
+            flash.timer = window.setTimeout(() => notice.classList.remove("show"), 2600);
+        }
+
+        document.querySelectorAll(".nav button").forEach((button) => {
+            button.addEventListener("click", () => setView(button.dataset.view));
+        });
+
+        document.querySelectorAll(".filter-btn").forEach((button) => {
             button.addEventListener("click", () => {
-                filterButtons.forEach((item) => item.classList.remove("active"));
+                activeRange = button.dataset.range;
+                document.querySelectorAll(".filter-btn").forEach((item) => item.classList.remove("active"));
                 button.classList.add("active");
-                renderChart(button.dataset.range);
+                renderDashboard();
             });
         });
 
-        renderChart("week");
+        document.querySelector("#searchInput").addEventListener("input", () => {
+            renderOrders();
+            renderInventory();
+            renderCustomers();
+        });
+
+        document.querySelector("#orderForm").addEventListener("submit", (event) => {
+            event.preventDefault();
+            const product = productById(document.querySelector("#orderProduct").value);
+            const qty = Number(document.querySelector("#orderQty").value);
+            if (qty > product.stock) {
+                flash(`Solo hay ${product.stock} unidades disponibles de ${product.name}.`);
+                return;
+            }
+            product.stock -= qty;
+            product.sold += qty;
+            data.orders.push({
+                id: Math.max(...data.orders.map((order) => order.id), 2048) + 1,
+                customerId: Number(document.querySelector("#orderClient").value),
+                productId: product.id,
+                qty,
+                status: document.querySelector("#orderStatus").value,
+                createdAt: new Date().toISOString().slice(0, 10)
+            });
+            saveData();
+            event.target.reset();
+            renderAll();
+            flash("Pedido guardado y stock actualizado.");
+        });
+
+        document.querySelector("#productForm").addEventListener("submit", (event) => {
+            event.preventDefault();
+            data.products.push({
+                id: Math.max(...data.products.map((product) => product.id), 0) + 1,
+                name: document.querySelector("#productName").value,
+                category: document.querySelector("#productCategory").value,
+                sizes: document.querySelector("#productSizes").value,
+                stock: Number(document.querySelector("#productStock").value),
+                price: Number(document.querySelector("#productPrice").value),
+                color: document.querySelector("#productColor").value,
+                sold: 0,
+                image: ""
+            });
+            saveData();
+            event.target.reset();
+            renderAll();
+            flash("Producto agregado al inventario.");
+        });
+
+        document.querySelector("#customerForm").addEventListener("submit", (event) => {
+            event.preventDefault();
+            data.customers.push({
+                id: Math.max(...data.customers.map((customer) => customer.id), 0) + 1,
+                name: document.querySelector("#customerName").value,
+                email: document.querySelector("#customerEmail").value,
+                city: document.querySelector("#customerCity").value,
+                segment: document.querySelector("#customerSegment").value
+            });
+            saveData();
+            event.target.reset();
+            renderAll();
+            flash("Cliente guardado correctamente.");
+        });
+
+        document.addEventListener("change", (event) => {
+            if (!event.target.matches("[data-order-status]")) return;
+            const order = data.orders.find((item) => item.id === Number(event.target.dataset.orderStatus));
+            order.status = event.target.value;
+            saveData();
+            renderAll();
+            flash("Estado del pedido actualizado.");
+        });
+
+        document.addEventListener("click", (event) => {
+            const plusId = event.target.dataset.stockPlus;
+            const minusId = event.target.dataset.stockMinus;
+            if (!plusId && !minusId) return;
+            const product = productById(plusId || minusId);
+            product.stock = Math.max(0, product.stock + (plusId ? 1 : -1));
+            saveData();
+            renderAll();
+        });
+
+        document.querySelector("#mainAction").addEventListener("click", () => {
+            if (activeView === "reportes") {
+                exportCsv();
+                return;
+            }
+            setView(activeView === "dashboard" ? "pedidos" : activeView);
+            const form = activeView === "pedidos" ? "#orderForm" : activeView === "inventario" ? "#productForm" : "#customerForm";
+            document.querySelector(form)?.scrollIntoView({ behavior: "smooth", block: "center" });
+        });
+
+        document.querySelector("#notifyButton").addEventListener("click", () => {
+            const low = data.products.filter((product) => product.stock <= 15).length;
+            const pending = data.orders.filter((order) => order.status === "Pendiente").length;
+            flash(`${low} productos con alerta de stock y ${pending} pedidos pendientes.`);
+        });
+
+        document.querySelector("#resetButton").addEventListener("click", () => {
+            data = structuredClone(defaultData);
+            saveData();
+            renderAll();
+            flash("Datos restaurados al ejemplo inicial.");
+        });
+
+        document.querySelector("#exportButton").addEventListener("click", exportCsv);
+
+        function exportCsv() {
+            const rows = [["pedido", "cliente", "producto", "cantidad", "estado", "total"]];
+            data.orders.forEach((order) => {
+                rows.push([`MN-${order.id}`, customerById(order.customerId).name, productById(order.productId).name, order.qty, order.status, orderTotal(order)]);
+            });
+            const csv = rows.map((row) => row.map((cell) => `"${String(cell).replaceAll('"', '""')}"`).join(",")).join("\n");
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "reporte-moda-nova.csv";
+            link.click();
+            URL.revokeObjectURL(link.href);
+            flash("Reporte CSV generado.");
+        }
+
+        renderAll();
     </script>
 </body>
 </html>
