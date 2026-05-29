@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moda Nova | Dashboard</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: #f5f6f1;
+            --panel: #ffffff;
+            --ink: #202124;
+            --muted: #6f746c;
+            --line: #dfe3d8;
+            --accent: #0f766e;
+            --accent-soft: #d9f1ee;
+            --gold: #b7791f;
+            --rose: #be4b63;
+            --green: #2f855a;
+            --blue: #2b6cb0;
+            --shadow: 0 18px 45px rgba(32, 33, 36, .08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        .app {
+            display: grid;
+            grid-template-columns: 252px minmax(0, 1fr);
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            padding: 24px 18px;
+            background: #101916;
+            color: #f6fbf8;
+            display: flex;
+            flex-direction: column;
+            gap: 26px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 8px;
+        }
+
+        .brand-mark {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            background: #e5b769;
+            color: #101916;
+            font-weight: 900;
+            letter-spacing: 0;
+        }
+
+        .brand strong {
+            display: block;
+            font-size: 18px;
+            line-height: 1.1;
+        }
+
+        .brand span {
+            display: block;
+            margin-top: 3px;
+            color: #aec0b8;
+            font-size: 12px;
+        }
+
+        .nav {
+            display: grid;
+            gap: 7px;
+        }
+
+        .nav button,
+        .icon-btn,
+        .primary-btn,
+        .filter-btn {
+            border: 0;
+            cursor: pointer;
+        }
+
+        .nav button {
+            width: 100%;
+            min-height: 42px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            background: transparent;
+            color: #dce8e2;
+            text-align: left;
+        }
+
+        .nav button.active,
+        .nav button:hover {
+            background: #23332e;
+            color: #ffffff;
+        }
+
+        .nav svg,
+        .icon-btn svg,
+        .search svg {
+            width: 18px;
+            height: 18px;
+            flex: 0 0 auto;
+        }
+
+        .sidebar-card {
+            margin-top: auto;
+            padding: 16px;
+            border-radius: 8px;
+            background: #1d2a26;
+            border: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .sidebar-card p {
+            margin: 6px 0 14px;
+            color: #c9d7d1;
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .sidebar-card strong {
+            font-size: 14px;
+        }
+
+        .main {
+            min-width: 0;
+            padding: 24px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .headline h1 {
+            margin: 0;
+            font-size: clamp(26px, 4vw, 38px);
+            line-height: 1.05;
+            letter-spacing: 0;
+        }
+
+        .headline p {
+            margin: 8px 0 0;
+            color: var(--muted);
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search {
+            width: min(340px, 34vw);
+            min-height: 42px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 0 12px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--panel);
+        }
+
+        .search input {
+            width: 100%;
+            min-width: 0;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: var(--ink);
+        }
+
+        .icon-btn,
+        .primary-btn,
+        .filter-btn {
+            min-height: 42px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            width: 42px;
+            background: var(--panel);
+            color: var(--ink);
+            border: 1px solid var(--line);
+        }
+
+        .primary-btn {
+            padding: 0 14px;
+            background: var(--accent);
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .metrics {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            margin-bottom: 16px;
+        }
+
+        .metric,
+        .panel,
+        .product-card,
+        .order-row {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .metric {
+            padding: 18px;
+            min-height: 136px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .metric-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .metric-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+
+        .metric-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .trend {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--green);
+        }
+
+        .metric small,
+        .panel-subtitle,
+        .muted {
+            color: var(--muted);
+        }
+
+        .metric strong {
+            margin-top: 14px;
+            display: block;
+            font-size: 28px;
+            line-height: 1;
+            letter-spacing: 0;
+        }
+
+        .metric small {
+            margin-top: 6px;
+            display: block;
+            font-size: 13px;
+        }
+
+        .content {
+            grid-template-columns: minmax(0, 1.45fr) minmax(320px, .75fr);
+            align-items: start;
+        }
+
+        .panel {
+            padding: 18px;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .panel-title {
+            margin: 0;
+            font-size: 18px;
+            line-height: 1.2;
+        }
+
+        .panel-subtitle {
+            margin: 5px 0 0;
+            font-size: 13px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0 12px;
+            background: #eef2e9;
+            color: #465149;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .filter-btn.active {
+            background: #101916;
+            color: #ffffff;
+        }
+
+        .chart-wrap {
+            min-height: 286px;
+            display: grid;
+            grid-template-rows: 1fr auto;
+            gap: 14px;
+        }
+
+        .chart {
+            height: 235px;
+            display: grid;
+            grid-template-columns: repeat(7, minmax(34px, 1fr));
+            gap: 12px;
+            align-items: end;
+            padding: 12px;
+            border-radius: 8px;
+            background: repeating-linear-gradient(
+                to top,
+                #f4f6f0,
+                #f4f6f0 1px,
+                transparent 1px,
+                transparent 46px
+            );
+            border: 1px solid #edf0e7;
+        }
+
+        .bar {
+            min-height: 20px;
+            border-radius: 8px 8px 4px 4px;
+            background: linear-gradient(180deg, #0f766e, #184d47);
+            position: relative;
+        }
+
+        .bar::after {
+            content: attr(data-value);
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: 800;
+            color: #38423b;
+        }
+
+        .chart-labels {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(34px, 1fr));
+            gap: 12px;
+            padding: 0 12px;
+            color: var(--muted);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .split {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(280px, .8fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 13px 10px;
+            border-bottom: 1px solid #edf0e7;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            color: var(--muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .stock {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .swatch {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 0, 0, .08);
+            flex: 0 0 auto;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            min-height: 26px;
+            padding: 0 9px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .tag.ok {
+            background: #dff3e8;
+            color: #236846;
+        }
+
+        .tag.warn {
+            background: #fff2cc;
+            color: #8a5a00;
+        }
+
+        .tag.danger {
+            background: #fce2e7;
+            color: #9f2842;
+        }
+
+        .product-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .product-card {
+            overflow: hidden;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 162px;
+            display: block;
+            object-fit: cover;
+            background: #e8ebe2;
+        }
+
+        .product-info {
+            padding: 13px;
+        }
+
+        .product-info strong {
+            display: block;
+            font-size: 15px;
+        }
+
+        .product-info span {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .progress {
+            height: 8px;
+            margin-top: 12px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: #eef2e9;
+        }
+
+        .progress i {
+            display: block;
+            height: 100%;
+            border-radius: inherit;
+            background: var(--accent);
+        }
+
+        .orders {
+            display: grid;
+            gap: 10px;
+        }
+
+        .order-row {
+            box-shadow: none;
+            padding: 12px;
+            display: grid;
+            grid-template-columns: 42px minmax(0, 1fr) auto;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: #efe5d2;
+            color: #6b4615;
+            font-weight: 900;
+        }
+
+        .order-row strong {
+            display: block;
+            font-size: 14px;
+        }
+
+        .order-row span {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .amount {
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .campaign {
+            min-height: 188px;
+            display: grid;
+            align-content: end;
+            padding: 18px;
+            border-radius: 8px;
+            color: #ffffff;
+            overflow: hidden;
+            background:
+                linear-gradient(180deg, rgba(16, 25, 22, .08), rgba(16, 25, 22, .88)),
+                url("https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=80") center / cover;
+        }
+
+        .campaign strong {
+            font-size: 21px;
+            line-height: 1.15;
+        }
+
+        .campaign p {
+            max-width: 520px;
+            margin: 8px 0 0;
+            color: rgba(255, 255, 255, .82);
+        }
+
+        @media (max-width: 1080px) {
+            .app {
+                grid-template-columns: 86px minmax(0, 1fr);
+            }
+
+            .sidebar {
+                padding: 18px 12px;
+            }
+
+            .brand div:not(.brand-mark),
+            .nav span,
+            .sidebar-card {
+                display: none;
+            }
+
+            .nav button {
+                justify-content: center;
+            }
+
+            .metrics {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .content,
+            .split {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .app {
+                display: block;
+            }
+
+            .sidebar {
+                position: static;
+                height: auto;
+                padding: 12px;
+                flex-direction: row;
+                align-items: center;
+                overflow-x: auto;
+            }
+
+            .brand {
+                padding: 0;
+            }
+
+            .nav {
+                display: flex;
+                min-width: max-content;
+            }
+
+            .main {
+                padding: 18px 14px 26px;
+            }
+
+            .topbar {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .actions {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) 42px 42px;
+            }
+
+            .search {
+                width: 100%;
+            }
+
+            .primary-btn {
+                grid-column: 1 / -1;
+            }
+
+            .metrics {
+                grid-template-columns: 1fr;
+            }
+
+            .panel-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .chart {
+                gap: 7px;
+            }
+
+            .chart-labels {
+                gap: 7px;
+            }
+
+            th:nth-child(3),
+            td:nth-child(3) {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar" aria-label="Navegacion principal">
+            <div class="brand">
+                <div class="brand-mark">MN</div>
+                <div>
+                    <strong>Moda Nova</strong>
+                    <span>Panel comercial</span>
+                </div>
+            </div>
+
+            <nav class="nav">
+                <button class="active" type="button" aria-label="Dashboard">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13h8V3H3v10Z"/><path d="M13 21h8V11h-8v10Z"/><path d="M13 3v6h8V3h-8Z"/><path d="M3 21h8v-6H3v6Z"/></svg>
+                    <span>Dashboard</span>
+                </button>
+                <button type="button" aria-label="Pedidos">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                    <span>Pedidos</span>
+                </button>
+                <button type="button" aria-label="Inventario">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
+                    <span>Inventario</span>
+                </button>
+                <button type="button" aria-label="Clientes">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <span>Clientes</span>
+                </button>
+                <button type="button" aria-label="Reportes">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                    <span>Reportes</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-card">
+                <strong>Meta mensual</strong>
+                <p>Faltan $4.8M para alcanzar el objetivo de mayo.</p>
+                <div class="progress" aria-hidden="true"><i style="width: 76%"></i></div>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div class="headline">
+                    <h1>Dashboard de tienda de ropa</h1>
+                    <p>Ventas, pedidos e inventario listos para revisar de un vistazo.</p>
+                </div>
+                <div class="actions">
+                    <label class="search" aria-label="Buscar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                        <input type="search" placeholder="Buscar producto, cliente o pedido">
+                    </label>
+                    <button class="icon-btn" type="button" title="Notificaciones" aria-label="Notificaciones">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    </button>
+                    <button class="icon-btn" type="button" title="Ajustes" aria-label="Ajustes">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4a1.65 1.65 0 0 0-1 .6 1.65 1.65 0 0 0-.38 1.04V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 8.6 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-.6-1 1.65 1.65 0 0 0-1.04-.38H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 8.6a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6c.38 0 .73-.13 1-.34.31-.24.5-.62.5-1.02V3a2 2 0 1 1 4 0v.09c0 .4.19.78.5 1.02.27.21.62.34 1 .34a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c0 .38.13.73.34 1 .24.31.62.5 1.02.5H21a2 2 0 1 1 0 4h-.09c-.4 0-.78.19-1.02.5-.21.27-.34.62-.34 1Z"/></svg>
+                    </button>
+                    <button class="primary-btn" type="button">Nuevo pedido</button>
+                </div>
+            </header>
+
+            <section class="grid metrics" aria-label="Indicadores principales">
+                <article class="metric">
+                    <div class="metric-top">
+                        <div class="metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+                        <span class="trend">+18%</span>
+                    </div>
+                    <div><strong>$28.4M</strong><small>Ventas del mes</small></div>
+                </article>
+                <article class="metric">
+                    <div class="metric-top">
+                        <div class="metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
+                        <span class="trend">+32</span>
+                    </div>
+                    <div><strong>486</strong><small>Pedidos confirmados</small></div>
+                </article>
+                <article class="metric">
+                    <div class="metric-top">
+                        <div class="metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.38 3.46 16 2l-4 4-4-4-4.38 1.46A2 2 0 0 0 2.3 5.34L2 9l4 1v12h12V10l4-1-.3-3.66a2 2 0 0 0-1.32-1.88Z"/></svg></div>
+                        <span class="trend">84%</span>
+                    </div>
+                    <div><strong>1.248</strong><small>Prendas disponibles</small></div>
+                </article>
+                <article class="metric">
+                    <div class="metric-top">
+                        <div class="metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+                        <span class="trend">+9%</span>
+                    </div>
+                    <div><strong>3.921</strong><small>Clientes activos</small></div>
+                </article>
+            </section>
+
+            <section class="grid content">
+                <div>
+                    <article class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h2 class="panel-title">Ventas por dia</h2>
+                                <p class="panel-subtitle">Semana actual en millones de pesos</p>
+                            </div>
+                            <div class="filters" aria-label="Filtro de grafica">
+                                <button class="filter-btn active" data-range="week" type="button">Semana</button>
+                                <button class="filter-btn" data-range="month" type="button">Mes</button>
+                                <button class="filter-btn" data-range="quarter" type="button">Trimestre</button>
+                            </div>
+                        </div>
+                        <div class="chart-wrap">
+                            <div class="chart" id="salesChart" aria-label="Grafica de ventas"></div>
+                            <div class="chart-labels" id="chartLabels"></div>
+                        </div>
+                    </article>
+
+                    <div class="split">
+                        <article class="panel">
+                            <div class="panel-header">
+                                <div>
+                                    <h2 class="panel-title">Inventario critico</h2>
+                                    <p class="panel-subtitle">Referencias que necesitan reposicion</p>
+                                </div>
+                            </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Stock</th>
+                                        <th>Talla</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><div class="stock"><span class="swatch" style="background:#171717"></span><strong>Blazer sastre negro</strong></div></td>
+                                        <td>12</td>
+                                        <td>S - M</td>
+                                        <td><span class="tag warn">Bajo</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="stock"><span class="swatch" style="background:#d9dde4"></span><strong>Jean recto claro</strong></div></td>
+                                        <td>8</td>
+                                        <td>28 - 32</td>
+                                        <td><span class="tag danger">Critico</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="stock"><span class="swatch" style="background:#7b2f3a"></span><strong>Vestido midi vino</strong></div></td>
+                                        <td>21</td>
+                                        <td>M - L</td>
+                                        <td><span class="tag ok">Estable</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="stock"><span class="swatch" style="background:#efe0bf"></span><strong>Camisa lino arena</strong></div></td>
+                                        <td>15</td>
+                                        <td>XS - M</td>
+                                        <td><span class="tag warn">Bajo</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </article>
+
+                        <article class="campaign">
+                            <strong>Coleccion urbana primavera</strong>
+                            <p>La campana activa concentra el 41% de las ventas online de la semana.</p>
+                        </article>
+                    </div>
+                </div>
+
+                <aside class="grid">
+                    <article class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h2 class="panel-title">Mas vendidos</h2>
+                                <p class="panel-subtitle">Productos con mayor rotacion</p>
+                            </div>
+                        </div>
+                        <div class="product-list">
+                            <div class="product-card">
+                                <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=700&q=80" alt="Chaqueta de cuero en exhibicion">
+                                <div class="product-info">
+                                    <strong>Chaqueta biker premium</strong>
+                                    <span>132 unidades vendidas</span>
+                                    <div class="progress"><i style="width: 88%"></i></div>
+                                </div>
+                            </div>
+                            <div class="product-card">
+                                <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=700&q=80" alt="Vestido casual de temporada">
+                                <div class="product-info">
+                                    <strong>Vestido vaporoso floral</strong>
+                                    <span>96 unidades vendidas</span>
+                                    <div class="progress"><i style="width: 71%"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h2 class="panel-title">Pedidos recientes</h2>
+                                <p class="panel-subtitle">Ultimos movimientos</p>
+                            </div>
+                        </div>
+                        <div class="orders">
+                            <div class="order-row">
+                                <div class="avatar">LC</div>
+                                <div><strong>Laura Cardenas</strong><span>#MN-2048 · Enviado</span></div>
+                                <div class="amount">$289K</div>
+                            </div>
+                            <div class="order-row">
+                                <div class="avatar">AM</div>
+                                <div><strong>Andres Mora</strong><span>#MN-2047 · Empaque</span></div>
+                                <div class="amount">$164K</div>
+                            </div>
+                            <div class="order-row">
+                                <div class="avatar">PR</div>
+                                <div><strong>Paula Rios</strong><span>#MN-2046 · Pago aprobado</span></div>
+                                <div class="amount">$421K</div>
+                            </div>
+                            <div class="order-row">
+                                <div class="avatar">SG</div>
+                                <div><strong>Sofia Gomez</strong><span>#MN-2045 · Pendiente</span></div>
+                                <div class="amount">$118K</div>
+                            </div>
+                        </div>
+                    </article>
+                </aside>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const ranges = {
+            week: {
+                labels: ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"],
+                values: [3.8, 4.6, 4.1, 5.2, 6.3, 3.9, 4.8]
+            },
+            month: {
+                labels: ["Sem 1", "Sem 2", "Sem 3", "Sem 4", "Sem 5", "Online", "Tienda"],
+                values: [14.2, 18.7, 21.4, 23.8, 20.2, 28.4, 19.6]
+            },
+            quarter: {
+                labels: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul"],
+                values: [42, 38, 47, 51, 58, 44, 49]
+            }
+        };
+
+        const chart = document.querySelector("#salesChart");
+        const labels = document.querySelector("#chartLabels");
+        const filterButtons = document.querySelectorAll(".filter-btn");
+
+        function renderChart(range) {
+            const data = ranges[range];
+            const max = Math.max(...data.values);
+            chart.innerHTML = "";
+            labels.innerHTML = "";
+
+            data.values.forEach((value) => {
+                const bar = document.createElement("div");
+                bar.className = "bar";
+                bar.style.height = `${Math.max(18, (value / max) * 100)}%`;
+                bar.dataset.value = value;
+                chart.appendChild(bar);
+            });
+
+            data.labels.forEach((label) => {
+                const item = document.createElement("span");
+                item.textContent = label;
+                labels.appendChild(item);
+            });
+        }
+
+        filterButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                filterButtons.forEach((item) => item.classList.remove("active"));
+                button.classList.add("active");
+                renderChart(button.dataset.range);
+            });
+        });
+
+        renderChart("week");
+    </script>
+</body>
+</html>
